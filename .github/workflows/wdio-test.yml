@@ -10,21 +10,8 @@ on:
 
 jobs:
   test:
-    name: Run WebdriverIO Tests on Docker
+    name: Run WebdriverIO Tests
     runs-on: ubuntu-latest
-
-    services:
-      selenium-chrome:
-        image: selenium/standalone-chrome:latest
-        ports:
-          - 4444:4444
-        options: >-
-          --health-cmd="curl -s http://localhost:4444/wd/hub/status | grep -q '\"ready\":true'"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
-        volumes:
-          - /dev/shm:/dev/shm
 
     steps:
       - name: Checkout code
@@ -33,7 +20,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18'
+          node-version: 'lts/*'
 
       - name: Install dependencies
         run: npm ci
@@ -44,12 +31,8 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Run WebdriverIO tests on Chrome in Docker
-        env:
-          ENV: development
-          BROWSER: chrome
-          GRID: true
-        run: npm run test:docker:chrome
+      - name: Run WebdriverIO tests
+        run: npm run test:local:chrome
 
       - name: Upload test artifacts (videos on failure)
         uses: actions/upload-artifact@v3
