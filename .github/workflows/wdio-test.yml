@@ -1,0 +1,74 @@
+name: WebdriverIO Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    name: Run WebdriverIO Tests on Docker
+    runs-on: ubuntu-latest
+
+    services:
+      selenium-chrome:
+        image: selenium/standalone-chrome:latest
+        ports:
+          - 4444:4444
+        options: >-
+          --health-cmd="curl -s http://localhost:4444/wd/hub/status | grep -q '\"ready\":true'"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+        volumes:
+          - /dev/shm:/dev/shm
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Run WebdriverIO tests on Chrome in Docker
+        env:
+          ENV: development
+          BROWSER: chrome
+          GRID: true
+        run: npm run test:docker:chrome
+
+      - name: Upload test artifacts (videos on failure)
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-videos
+          path: ./_results_
+
+      - name: Generate Allure Report
+        run: npm run generate-report
+
+      - name: Upload Allure Report as Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: allure-report
+          path: ./allure-report
+
+      - name: Deploy Allure Report to GitHub Pages
+        if: success()
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./allure-report

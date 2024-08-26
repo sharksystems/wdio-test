@@ -1,0 +1,5 @@
+node_modules/
+.vscode/*
+_results_
+allure-report/
+allure-results/

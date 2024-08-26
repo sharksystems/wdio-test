@@ -1,0 +1,31 @@
+networks:
+  selenium_net:
+    driver: bridge
+
+services:
+  selenium-chrome:
+    image: selenium/standalone-chrome:latest
+    platform: linux/amd64
+    container_name: selenium-chrome
+    networks:
+      - selenium_net
+    ports:
+      - "4444:4444"
+
+  selenium-firefox:
+    image: selenium/standalone-firefox:latest
+    platform: linux/amd64
+    container_name: selenium-firefox
+    networks:
+      - selenium_net
+    ports:
+      - "4445:4444"
+
+  selenium-edge:
+    image: selenium/standalone-edge:latest
+    platform: linux/amd64
+    container_name: selenium-edge
+    networks:
+      - selenium_net
+    ports:
+      - "4446:4444"
