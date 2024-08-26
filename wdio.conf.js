@@ -7,22 +7,23 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const environment = process.env.ENV || 'development';
 const browserName = process.env.BROWSER || 'chrome';
-const isGrid = process.env.GRID || false;
+const isGrid = process.env.GRID === 'true';
 
 console.log(`Running with ENV: ${environment}`);
 console.log(`Running on BROWSER: ${browserName}`);
 console.log(`Running on GRID: ${isGrid}`);
 
 export const config = {
-    runner: 'local',
+    runner: isGrid ? undefined : 'local',
+    services: isGrid ? [] : ['chromedriver', 'geckodriver', 'edgedriver'],
     
     // Adjust runner settings to connect to the correct port based on the browser
     hostname: isGrid ? 'localhost' : undefined,
     port: isGrid
-        ? browserName === 'chrome' ? 4444
-        : browserName === 'firefox' ? 4445
-        : browserName === 'MicrosoftEdge' ? 4446
-        : 4444 // Fallback to Chrome port if no match
+        ? (browserName === 'chrome' ? 4444
+          : browserName === 'firefox' ? 4445
+          : browserName === 'MicrosoftEdge' ? 4446
+          : 4444)
         : undefined,
     path: isGrid ? '/wd/hub' : undefined,
 
