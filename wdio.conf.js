@@ -36,7 +36,7 @@ export const config = {
             browserName: browserName,
             "wdio:enforceWebDriverClassic": true,
             'goog:chromeOptions': {
-                args: environment === 'production' ? ['--disable-gpu', '--no-sandbox', '--disable-dev-shm-usage'] : ['--disable-infobars', '--window-size=1920,1080']
+                args: environment === 'production' ? ['--headless', '--disable-gpu', '--no-sandbox', '--disable-dev-shm-usage'] : ['--disable-infobars', '--window-size=1920,1080']
             },
             'moz:firefoxOptions': {
                 args: environment === 'production' ? ['-headless', '--width=1920', '--height=1080'] : ['--width=1920', '--height=1080']
