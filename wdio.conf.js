@@ -55,14 +55,23 @@ export const config = {
     framework: 'mocha',
     reporters: [
         'spec',
-        ['allure', { outputDir: 'allure-results' }],
-        ['video', { saveAllVideos: false, videoSlowdownMultiplier: 1.5 }]
+        ['allure', {
+            outputDir: 'allure-results',
+            disableWebdriverStepsReporting: true,
+            disableWebdriverScreenshotsReporting: false,
+        }],
+        ['video', {
+            saveAllVideos: false,
+            videoSlowdownMultiplier: 1,
+            video: {
+                singleFile: false,
+            }
+        }]
     ],
-
     onPrepare: () => {
         const allureResultsDir = join(__dirname, 'allure-results');
         if (!fs.existsSync(allureResultsDir)) {
             fs.mkdirSync(allureResultsDir);
         }
-    }
+    },
 };
