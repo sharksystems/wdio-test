@@ -15,7 +15,6 @@ console.log(`Running on GRID: ${isGrid}`);
 
 export const config = {
     runner: isGrid ? undefined : 'local',
-    services: isGrid ? [] : ['chromedriver', 'geckodriver', 'edgedriver'],
     
     // Adjust runner settings to connect to the correct port based on the browser
     hostname: isGrid ? 'localhost' : undefined,
