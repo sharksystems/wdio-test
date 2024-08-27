@@ -25,6 +25,13 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Install other dependencies
+        run: sudo apt-get update && sudo apt-get install -y \
+          libnss3 \
+          libgconf-2-4 \
+          libgbm-dev \
+          libxkbcommon-x11-0
+
       - name: Install Java
         uses: actions/setup-java@v3
         with:
@@ -32,7 +39,7 @@ jobs:
           java-version: '17'
 
       - name: Run WebdriverIO tests
-        run: npm run test:local:chrome
+        run: npm run test:local-prod:chrome
 
       - name: Upload test artifacts (videos on failure)
         uses: actions/upload-artifact@v3

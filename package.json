@@ -5,10 +5,11 @@
   "type": "module",
   "scripts": {
     "test:local:chrome": "ENV=development BROWSER=chrome GRID=false npx wdio run ./wdio.conf.js",
+    "test:local-prod:chrome": "ENV=production BROWSER=chrome GRID=false npx wdio run ./wdio.conf.js",
     "test:local:firefox": "ENV=development BROWSER=firefox GRID=false npx wdio run ./wdio.conf.js",
-    "test:docker:chrome": "ENV=development BROWSER=chrome GRID=true npx wdio run ./wdio.conf.js",
-    "test:docker:firefox": "ENV=development BROWSER=firefox GRID=true npx wdio run ./wdio.conf.js",
-    "test:docker:edge": "ENV=development BROWSER=MicrosoftEdge GRID=true npx wdio run ./wdio.conf.js",
+    "test:docker:chrome": "ENV=production BROWSER=chrome GRID=true npx wdio run ./wdio.conf.js",
+    "test:docker:firefox": "ENV=production BROWSER=firefox GRID=true npx wdio run ./wdio.conf.js",
+    "test:docker:edge": "ENV=production BROWSER=MicrosoftEdge GRID=true npx wdio run ./wdio.conf.js",
     "generate-report": "allure generate allure-results --clean -o allure-report",
     "open-report": "allure open allure-report"
   },
