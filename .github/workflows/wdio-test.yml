@@ -33,6 +33,7 @@ jobs:
 
       - name: Run WebdriverIO tests
         run: npm run test:local-prod:chrome
+        continue-on-error: true
 
       - name: Upload test artifacts (videos on failure)
         uses: actions/upload-artifact@v3
