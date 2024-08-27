@@ -28,7 +28,7 @@ jobs:
       - name: Setup Chrome
         uses: browser-actions/setup-chrome@v1
         with:
-         chrome-version: 'latest'
+         chrome-version: '128'
 
       - name: Install Java
         uses: actions/setup-java@v3
