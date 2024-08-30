@@ -7,10 +7,12 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const environment = process.env.ENV || 'development';
 const browserName = process.env.BROWSER || 'chrome';
+const browserVersion = process.env.VERSION;
 const isGrid = process.env.GRID === 'true';
 
 console.log(`Running with ENV: ${environment}`);
 console.log(`Running on BROWSER: ${browserName}`);
+console.log(`BROWSER Version: ${browserVersion}`);
 console.log(`Running on GRID: ${isGrid}`);
 
 export const config = {
@@ -34,6 +36,7 @@ export const config = {
     capabilities: [
         {
             browserName: browserName,
+            browserVersion: browserVersion,
             "wdio:enforceWebDriverClassic": true,
             'goog:chromeOptions': {
                 args: environment === 'production' ? ['--headless', '--disable-gpu', '--no-sandbox', '--disable-dev-shm-usage'] : ['--disable-infobars', '--window-size=1920,1080']
