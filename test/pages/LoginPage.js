@@ -2,7 +2,7 @@ import BasePage from './BasePage.js';
 import { expect as wdioExpect } from '@wdio/globals';
 
 
-export default class LoginPage extends BasePage {
+class LoginPage extends BasePage {
     get emailField() {
         return $('input[formcontrolname="email"]');
     }
@@ -38,3 +38,5 @@ export default class LoginPage extends BasePage {
         await wdioExpect(browser).toHaveUrl('https://conduit.realworld.how/login');
     }
 }
+
+export default new LoginPage();

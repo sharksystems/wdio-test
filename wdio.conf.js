@@ -50,12 +50,16 @@ export const config = {
         }
     ],
 
-    logLevel: 'info',
-    waitforTimeout: 30000,
-    connectionRetryTimeout: 180000,
+    // logLevel: 'info',
+    waitforTimeout: 10000,
+    connectionRetryTimeout: 120000,
     connectionRetryCount: 5,
 
     framework: 'mocha',
+    mochaOpts: {
+        ui: 'bdd',
+        timeout: 30000,
+    },
     reporters: [
         'spec',
         ['allure', {
@@ -63,13 +67,13 @@ export const config = {
             disableWebdriverStepsReporting: true,
             disableWebdriverScreenshotsReporting: false,
         }],
-        ['video', {
-            saveAllVideos: false,
-            videoSlowdownMultiplier: 1,
-            video: {
-                singleFile: false,
-            }
-        }]
+        // ['video', {
+        //     saveAllVideos: false,
+        //     videoSlowdownMultiplier: 1,
+        //     video: {
+        //         singleFile: false,
+        //     }
+        // }]
     ],
     onPrepare: () => {
         const allureResultsDir = join(__dirname, 'allure-results');

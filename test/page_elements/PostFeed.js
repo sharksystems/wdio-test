@@ -1,6 +1,6 @@
 import { expect as wdioExpect, browser } from '@wdio/globals';
 
-export default class PostFeed {
+class PostFeed {
     get yourFeedTab() {
         return $('//a[contains(.,"Your Feed")]');
     }
@@ -17,7 +17,7 @@ export default class PostFeed {
         return $('//div[contains(text(), "No articles are here... yet.")]');
     }
     get articlePreview() {
-        return $('//div[@class="article-preview"]');
+        return $('div.article-preview');
     }
 
     async clickYourFeedTab() {
@@ -53,7 +53,7 @@ export default class PostFeed {
         await postAuthorLink.click();
     }
     async clickPostByAuthor(author) {
-        const postByAuthor = await $(`//div[@class='article-preview' and contains(.,"${author}")][1]//a[@class='preview-link']`);
+        const postByAuthor = await $(`(//div[@class='article-preview' and contains(.,"${author}")])[1]//a[@class='preview-link']/span`);
         await postByAuthor.waitForClickable();
         await postByAuthor.click();
     }
@@ -66,7 +66,7 @@ export default class PostFeed {
         const likeButton = await $(`//div[@class = 'article-preview' and contains(.,"${title}")]//button`);
         await likeButton.waitForClickable();
         await likeButton.click();
-        await browser.pause(1000);
+        await browser.pause(2000);
     }
     async getLikeCountByTitle(title) {
         const likeButton = await $(`//div[@class = 'article-preview' and contains(.,"${title}")]//button`);
@@ -89,15 +89,41 @@ export default class PostFeed {
         const posts = await $$(`//div[@class='article-preview']//a[contains(.,"${author}")]`);
         return posts.length > 0;
     }
-    async refreshProfileUntilNoPostsByAuthorAreDisplayed(author, retryCount = 10) {
+    async refreshProfileUntilCanClickPostByAuthor(author, retryCount = 5) {
         let attempts = 0;
+        let postsDisplayed
         while (attempts < retryCount) {
-            await this.clickMyArticlesTab();
-            await browser.pause(500);
             await this.clickFavoritedArticlesTab();
             await browser.pause(500);
+            await this.clickMyArticlesTab();
+            await browser.pause(500);
 
-            const postsDisplayed = await this.arePostsByAuthorDisplayed(author);
+            postsDisplayed = await this.arePostsByAuthorDisplayed(author);
+            if (postsDisplayed) {
+                break;
+            }
+            attempts++;
+        }
+        await this.clickPostByAuthor(author);
+    }
+    async refreshProfileUntilNoPostsByAuthorAreDisplayed(author, myPosts = false, retryCount = 5) {
+        let attempts = 0;
+        let postsDisplayed
+        while (attempts < retryCount) {
+            if (!myPosts) {
+                await this.clickMyArticlesTab();
+                await browser.pause(500);
+                await this.clickFavoritedArticlesTab();
+                await browser.pause(500);
+            }
+            else {
+                await this.clickFavoritedArticlesTab();
+                await browser.pause(500);
+                await this.clickMyArticlesTab();
+                await browser.pause(500);
+            }
+
+            postsDisplayed = await this.arePostsByAuthorDisplayed(author);
             if (!postsDisplayed) {
                 break;
             }
@@ -105,7 +131,7 @@ export default class PostFeed {
         }
         await this.assertNoPostsDisplayed();
     }
-    async refreshFeedUntilNoPostsByAuthorAreDisplayed(author, retryCount = 10) {
+    async refreshFeedUntilNoPostsByAuthorAreDisplayed(author, retryCount = 5) {
         let attempts = 0;
         while (attempts < retryCount) {
             await this.clickGlobalFeedTab();
@@ -122,3 +148,5 @@ export default class PostFeed {
         await this.assertNoPostsDisplayed();
     }
 }
+
+export default new PostFeed();

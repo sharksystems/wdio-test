@@ -35,11 +35,11 @@ jobs:
         run: npm run test:local-prod:chrome
         continue-on-error: true
 
-      - name: Upload test artifacts (videos on failure)
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-videos
-          path: ./_results_
+      # - name: Upload test artifacts (videos on failure)
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: test-videos
+      #     path: ./_results_
 
       - name: Generate Allure Report
         run: npm run generate-report

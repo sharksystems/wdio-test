@@ -9,7 +9,6 @@ import RandomUser from "../resources/RandomUser.js";
 import RandomPost from "../resources/RandomPost.js";
 import SampleData from "../resources/SampleData.js";
 
-// npx wdio run wdio.conf.js
 
 describe('Smoke Test', () => {
   const randomUser = new RandomUser();
@@ -17,193 +16,181 @@ describe('Smoke Test', () => {
   const invalidUser = new RandomUser();
   const sampleData = new SampleData();
 
-  let homePage, registrationPage, loginPage, profilePage, profileSettingsPage, postCreationPage, fullPostPage;
-
   beforeEach(async () => {
-    homePage = new HomePage();
-    registrationPage = new RegistrationPage();
-    loginPage = new LoginPage();
-    profilePage = new ProfilePage();
-    profileSettingsPage = new ProfileSettingsPage();
-    postCreationPage = new PostCreationPage();
-    fullPostPage = new FullPostPage();
-
     await browser.reloadSession();
-    await homePage.visit();
+    await HomePage.visit();
   });
-  it('Registration Test', async () => {
+  
+  it.only('Registration Test', async () => {
 
-    await registrationPage.registerUser(randomUser.getUsername, randomUser.getEmail, randomUser.getPassword);
-    await homePage.assertLoggedInAs(randomUser.getUsername);
+    await RegistrationPage.registerUser(randomUser.getUsername, randomUser.getEmail, randomUser.getPassword);
+    await HomePage.assertLoggedInAs(randomUser.getUsername);
   });
   it('Register as existing user', async () => {
 
-    await registrationPage.registerUser(randomUser.getUsername, randomUser.getEmail, randomUser.getPassword);
-    await registrationPage.assertEmailTakenErrorMsg();
-    await registrationPage.assertUsernameTakenErrorMsg();
+    await RegistrationPage.registerUser(randomUser.getUsername, randomUser.getEmail, randomUser.getPassword);
+    await RegistrationPage.assertEmailTakenErrorMsg();
+    await RegistrationPage.assertUsernameTakenErrorMsg();
   });
   it('Login Test', async () => {
 
-    await loginPage.login(randomUser.getEmail, randomUser.getPassword);
-    await homePage.assertLoggedInAs(randomUser.getUsername);
+    await LoginPage.login(randomUser.getEmail, randomUser.getPassword);
+    await HomePage.assertLoggedInAs(randomUser.getUsername);
   });
   it('Login using invalid email', async () => {
 
-    await loginPage.login(invalidUser.getEmail, randomUser.getPassword);
-    await loginPage.assertUsernameOrPasswordErrorMsg();
+    await LoginPage.login(invalidUser.getEmail, randomUser.getPassword);
+    await LoginPage.assertUsernameOrPasswordErrorMsg();
   });
   it('Login using invalid password', async () => {
 
-    await loginPage.login(randomUser.getEmail, invalidUser.getPassword);
-    await loginPage.assertUsernameOrPasswordErrorMsg();
+    await LoginPage.login(randomUser.getEmail, invalidUser.getPassword);
+    await LoginPage.assertUsernameOrPasswordErrorMsg();
   });
   it('Logout Test', async () => {
 
-    await loginPage.login(randomUser.getEmail, randomUser.getPassword);
-    await homePage.clickSettingsBtn();
-    await profileSettingsPage.clickLogoutBtn();
-    await homePage.assertSignInBtnVisible();
+    await LoginPage.login(randomUser.getEmail, randomUser.getPassword);
+    await HomePage.clickSettingsBtn();
+    await ProfileSettingsPage.clickLogoutBtn();
+    await HomePage.assertSignInBtnVisible();
   });
   it('Liking a Post on the Main Page', async () => {
     const likeUser = new RandomUser();
 
-    await registrationPage.registerUser(likeUser.getUsername, likeUser.getEmail, likeUser.getPassword);
-    await homePage.clickGlobalFeedTab();
-    await homePage.likeByTitleAndVerify(sampleData.getTitle);
+    await RegistrationPage.registerUser(likeUser.getUsername, likeUser.getEmail, likeUser.getPassword);
+    await HomePage.clickGlobalFeedTab();
+    await HomePage.likeByTitleAndVerify(sampleData.getTitle);
   });
-  it('Removing a favorited article on the profile page', async () => {
+  it.only('Removing a favorited article on the profile page', async () => {
 
-    await loginPage.login(randomUser.getEmail, randomUser.password);
-    await homePage.clickGlobalFeedTab();
-    await homePage.likeByTitleAndVerify(sampleData.getTitle2);
-    await homePage.clickProfileBtn();
-    await profilePage.clickFavoritedArticlesTab();
-    await profilePage.removeLikeFromPostByTitleAndVerify(sampleData.getTitle2);
-    await profilePage.refreshUntilNoPostsByAuthorAreDisplayed(sampleData.getAuthor);
+    await LoginPage.login(randomUser.getEmail, randomUser.password);
+    await HomePage.clickGlobalFeedTab();
+    await HomePage.likeByTitleAndVerify(sampleData.getTitle2);
+    await HomePage.clickProfileBtn();
+    await ProfilePage.clickFavoritedArticlesTab();
+    await ProfilePage.removeLikeFromPostByTitleAndVerify(sampleData.getTitle2);
+    await ProfilePage.refreshUntilNoPostsByAuthorAreDisplayed(sampleData.getAuthor);
 
   });
   it('Liking a post without logging in', async () => {
-    await homePage.likePostByTitle(sampleData.getTitle);
-    await registrationPage.assertUserIsOnRegistrationPage();
+    await HomePage.likePostByTitle(sampleData.getTitle);
+    await RegistrationPage.assertUserIsOnRegistrationPage();
   });
   it('Creating a Post', async () => {
     const postUser = new RandomUser();
     const randomPost = new RandomPost();
 
-    await registrationPage.registerUser(postUser.getUsername, postUser.getEmail, postUser.getPassword);
-    await homePage.clickNewPostBtn();
-    await postCreationPage.createPost(randomPost.getTitle, randomPost.getSummary, randomPost.getContent);
-    await fullPostPage.verifyPostContents(randomPost.getTitle, randomPost.getContent);
+    await RegistrationPage.registerUser(postUser.getUsername, postUser.getEmail, postUser.getPassword);
+    await HomePage.clickNewPostBtn();
+    await PostCreationPage.createPost(randomPost.getTitle, randomPost.getSummary, randomPost.getContent);
+    await FullPostPage.verifyPostContents(randomPost.getTitle, randomPost.getContent);
   });
   it('Editing a post', async () => {
     const postUser = new RandomUser();
     const updatedPost = new RandomPost();
 
-    await registrationPage.registerUser(postUser.getUsername, postUser.getEmail, postUser.getPassword);
-    await homePage.clickNewPostBtn();
-    await postCreationPage.createPost(randomPost.getTitle, randomPost.getSummary, randomPost.getContent);
-    await fullPostPage.clickEditPostBtn();
-    await postCreationPage.createPost(updatedPost.getTitle, updatedPost.getSummary, updatedPost.getContent);
-    await fullPostPage.verifyPostContents(updatedPost.getTitle, updatedPost.getContent);
+    await RegistrationPage.registerUser(postUser.getUsername, postUser.getEmail, postUser.getPassword);
+    await HomePage.clickNewPostBtn();
+    await PostCreationPage.createPost(randomPost.getTitle, randomPost.getSummary, randomPost.getContent);
+    await FullPostPage.clickEditPostBtn();
+    await PostCreationPage.createPost(updatedPost.getTitle, updatedPost.getSummary, updatedPost.getContent);
+    await FullPostPage.verifyPostContents(updatedPost.getTitle, updatedPost.getContent);
   });
   it('Deleting a post from the profile page', async () => {
     const randomPost = new RandomPost();
 
-    await loginPage.login(randomUser.getEmail, randomUser.password);
-    await homePage.clickNewPostBtn();
-    await postCreationPage.enterPostTitle(randomPost.getTitle);
-    await postCreationPage.enterPostSummary(randomPost.getSummary);
-    await postCreationPage.enterPostContent(randomPost.getContent);
-    await postCreationPage.clickPostSubmitBtn();
-    await homePage.clickProfileBtn();
-    await profilePage.clickPostByTitle(randomPost.getTitle);
-    await fullPostPage.clickDeletePostBtn();
-    await homePage.clickProfileBtn();
-    await profilePage.refreshUntilNoPostsByAuthorAreDisplayed(randomUser.getUsername);
+    await LoginPage.login(randomUser.getEmail, randomUser.password);
+    await HomePage.clickNewPostBtn();
+    await PostCreationPage.createPost(randomPost.getTitle, randomPost.getSummary, randomPost.getContent);
+    await HomePage.clickProfileBtn();
+    await ProfilePage.refreshProfileUntilCanClickPostByAuthor(randomUser.getUsername);
+    await FullPostPage.clickDeletePostBtn();
+    await HomePage.clickProfileBtn();
+    await ProfilePage.refreshUntilNoPostsByAuthorAreDisplayed(randomUser.getUsername, true);
 
   });
   it('Following an author via the Profile page', async () => {
     const followUser = new RandomUser();
 
-    await registrationPage.registerUser(followUser.getUsername, followUser.getEmail, followUser.getPassword);
+    await RegistrationPage.registerUser(followUser.getUsername, followUser.getEmail, followUser.getPassword);
 
-    await homePage.clickGlobalFeedTab();
-    await homePage.clickPostAuthor(sampleData.getAuthor);
-    await profilePage.clickFollowBtn();
+    await HomePage.clickGlobalFeedTab();
+    await HomePage.clickPostAuthor(sampleData.getAuthor);
+    await ProfilePage.clickFollowBtn();
 
-    await homePage.clickHomeBtn();
-    await homePage.clickYourFeedTab();
-    await homePage.assertPostsByAuthorDisplayed(sampleData.getAuthor);
+    await HomePage.clickHomeBtn();
+    await HomePage.clickYourFeedTab();
+    await HomePage.assertPostsByAuthorDisplayed(sampleData.getAuthor);
   });
   it('Unfollowing an author via the Full Post page', async () => {
 
-    await loginPage.login(randomUser.getEmail, randomUser.getPassword);
-    await homePage.clickGlobalFeedTab();
-    await homePage.clickPostAuthor(sampleData.getAuthor);
-    await profilePage.clickFollowBtn();
-    await homePage.clickHomeBtn();
-    await homePage.clickPostByAuthor(sampleData.getAuthor);
-    await fullPostPage.clickFollowBtn();
-    await homePage.clickHomeBtn();
-    await homePage.refreshUntilNoPostsByAuthorAreDisplayed(sampleData.getAuthor);
+    await LoginPage.login(randomUser.getEmail, randomUser.getPassword);
+    await HomePage.clickGlobalFeedTab();
+    await HomePage.clickPostAuthor(sampleData.getAuthor);
+    await ProfilePage.clickFollowBtn();
+    await HomePage.clickHomeBtn();
+    await HomePage.clickPostByAuthor(sampleData.getAuthor);
+    await FullPostPage.clickFollowBtn();
+    await HomePage.clickHomeBtn();
+    await HomePage.refreshUntilNoPostsByAuthorAreDisplayed(sampleData.getAuthor);
   });
   it('Following an author without logging in', async () => {
 
-    await homePage.clickGlobalFeedTab();
-    await homePage.clickPostAuthor(sampleData.getAuthor);
-    await profilePage.clickFollowBtn();
-    await loginPage.assertUserIsOnLoginPage();
+    await HomePage.clickGlobalFeedTab();
+    await HomePage.clickPostAuthor(sampleData.getAuthor);
+    await ProfilePage.clickFollowBtn();
+    await LoginPage.assertUserIsOnLoginPage();
   });
   it('Posting a comment on a post', async () => {
     const postUser = new RandomUser();
     const randomPost = new RandomPost();
 
-    await registrationPage.registerUser(postUser.getUsername, postUser.getEmail, postUser.getPassword);
-    await homePage.clickNewPostBtn();
-    await postCreationPage.createPost(randomPost.getTitle, randomPost.getSummary, randomPost.getContent);
-    await fullPostPage.createComment(randomPost.getComment);
-    await fullPostPage.assertCommentByContent(randomPost.getComment);
+    await RegistrationPage.registerUser(postUser.getUsername, postUser.getEmail, postUser.getPassword);
+    await HomePage.clickNewPostBtn();
+    await PostCreationPage.createPost(randomPost.getTitle, randomPost.getSummary, randomPost.getContent);
+    await FullPostPage.createComment(randomPost.getComment);
+    await FullPostPage.assertCommentByContent(randomPost.getComment);
 
   });
   it('Deleting a comment', async () => {
     const postUser = new RandomUser();
     const randomPost = new RandomPost();
 
-    await registrationPage.registerUser(postUser.getUsername, postUser.getEmail, postUser.getPassword);
-    await homePage.clickNewPostBtn();
-    await postCreationPage.createPost(randomPost.getTitle, randomPost.getSummary, randomPost.getContent);
-    await fullPostPage.createComment(randomPost.getComment);
-    await fullPostPage.assertCommentByContent(randomPost.getComment);
-    await fullPostPage.deleteCommentByContent(randomPost.getComment);
-    await fullPostPage.assertNoCommentByContent(randomPost.getComment);
+    await RegistrationPage.registerUser(postUser.getUsername, postUser.getEmail, postUser.getPassword);
+    await HomePage.clickNewPostBtn();
+    await PostCreationPage.createPost(randomPost.getTitle, randomPost.getSummary, randomPost.getContent);
+    await FullPostPage.createComment(randomPost.getComment);
+    await FullPostPage.assertCommentByContent(randomPost.getComment);
+    await FullPostPage.deleteCommentByContent(randomPost.getComment);
+    await FullPostPage.assertNoCommentByContent(randomPost.getComment);
 
   });
   it('Posting a comment without logging in ', async () => {
 
-    homePage.clickPostByAuthor(sampleData.getAuthor);
-    fullPostPage.assertCommentInputFieldNotVisible();
-    fullPostPage.assertLoginToCommentMsgVisible();
+    HomePage.clickPostByAuthor(sampleData.getAuthor);
+    FullPostPage.assertCommentInputFieldNotVisible();
+    FullPostPage.assertLoginToCommentMsgVisible();
   });
   it('Posting an empty comment', async () => {
 
-    await loginPage.login(randomUser.getEmail, randomUser.password);
-    await homePage.clickPostByAuthor(sampleData.getAuthor);
-    await fullPostPage.clickCommentSubmitBtn();
-    await fullPostPage.assertEmptyCommentErrorMsgVisible();
+    await LoginPage.login(randomUser.getEmail, randomUser.password);
+    await HomePage.clickPostByAuthor(sampleData.getAuthor);
+    await FullPostPage.clickCommentSubmitBtn();
+    await FullPostPage.assertEmptyCommentErrorMsgVisible();
   });
 
   it('Creating a post with an existing title', async () => {
     const randomPost = new RandomPost();
     const updatedPost = new RandomPost();
 
-    await loginPage.login(randomUser.getEmail, randomUser.password);
-    await homePage.clickNewPostBtn();
-    await postCreationPage.enterPostTitle(randomPost.getTitle);
-    await postCreationPage.enterPostSummary(randomPost.getSummary);
-    await postCreationPage.enterPostContent(randomPost.getContent);
-    await postCreationPage.clickPostSubmitBtn();
-    await fullPostPage.clickEditPostBtn();
-    await postCreationPage.createPost(randomPost.getTitle, updatedPost.getSummary, updatedPost.getContent);
-    await postCreationPage.assertTitleExistsErrorMsgVisible();
+    await LoginPage.login(randomUser.getEmail, randomUser.password);
+    await HomePage.clickNewPostBtn();
+    await PostCreationPage.enterPostTitle(randomPost.getTitle);
+    await PostCreationPage.enterPostSummary(randomPost.getSummary);
+    await PostCreationPage.enterPostContent(randomPost.getContent);
+    await PostCreationPage.clickPostSubmitBtn();
+    await FullPostPage.clickEditPostBtn();
+    await PostCreationPage.createPost(randomPost.getTitle, updatedPost.getSummary, updatedPost.getContent);
+    await PostCreationPage.assertTitleExistsErrorMsgVisible();
   });
 });

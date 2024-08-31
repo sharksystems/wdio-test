@@ -1,7 +1,7 @@
 import BasePage from './BasePage.js';
-import { expect as wdioExpect, browser } from '@wdio/globals'
+import { expect as wdioExpect, browser } from '@wdio/globals';
 
-export default class PostCreationPage extends BasePage {
+class PostCreationPage extends BasePage {
     get postTitleInput() {
         return $('input[formcontrolname="title"]');
     }
@@ -32,7 +32,7 @@ export default class PostCreationPage extends BasePage {
     }
     async clickPostSubmitBtn() {
         await this.postSubmitBtn.click();
-        await browser.pause(5000);
+        await browser.pause(2000);
     }
     async createPost(title, summary, content) {
         await this.enterPostTitle(title);
@@ -44,3 +44,5 @@ export default class PostCreationPage extends BasePage {
         await wdioExpect(this.titleExistsErrorMsg).toBeDisplayed();
     }
 }
+
+export default new PostCreationPage();

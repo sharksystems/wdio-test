@@ -1,6 +1,6 @@
 import BasePage from './BasePage.js';
 
-export default class ProfileSettingsPage extends BasePage {
+class ProfileSettingsPage extends BasePage {
     get logoutBtn() {
         return $('button.btn-outline-danger');
     }
@@ -9,3 +9,5 @@ export default class ProfileSettingsPage extends BasePage {
         await this.logoutBtn.click();
     }
 }
+
+export default new ProfileSettingsPage();

@@ -1,7 +1,7 @@
 import BasePage from './BasePage.js';
 import { expect as wdioExpect, browser } from '@wdio/globals';
 
-export default class FullPostPage extends BasePage {
+class FullPostPage extends BasePage {
     get deletePostBtn() {
         return $('button.btn-outline-danger');
     }
@@ -9,7 +9,7 @@ export default class FullPostPage extends BasePage {
         return $('a.btn-outline-secondary');
     }
     get followBtn() {
-        return $('i.ion-plus-round');
+        return $('button:has(i.ion-plus-round)');
     }
     get loginToCommentMsg() {
         return $('//div[@class="col-xs-12 col-md-8 offset-md-2"]//div[contains(.,"Sign in or sign up to add comments on this article.")]');
@@ -26,6 +26,7 @@ export default class FullPostPage extends BasePage {
 
     async clickDeletePostBtn() {
         await this.deletePostBtn.click();
+        await browser.pause(2000);
     }
     async clickEditPostBtn() {
         await this.editPostBtn.click();
@@ -75,3 +76,5 @@ export default class FullPostPage extends BasePage {
         await wdioExpect(this.emptyCommentErrorMsg).toBeDisplayed();
     }
 }
+
+export default new FullPostPage();

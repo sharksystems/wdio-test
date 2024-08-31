@@ -16,7 +16,7 @@ The website has recently been updated and is experiencing some perfomance issues
 
 ## Requirements
 
-- Node.js (v14 or later)
+- Node.js (v20 or later)
 - Java (or Allure reports)
 - Docker (for running locally on a Selenium Standalone image)
 
@@ -31,15 +31,17 @@ Running tests locally
 
 npm run test:local:chrome
 
-npm run test:local-prod:chrome
+npm run test:local-old:chrome
 
 npm run test:local:firefox
 
+npm run test:local:edge
+
 ## Running tests on a Docker container
 
-docker-compose build - Build Docker image
+Note: Make sure you have at least 10 gb of free space available and Docker Desktop is running
 
-docker-compose up -d - Start Docker Containers
+docker-compose up -d - Pull images / Start Docker Containers
 
 docker-compose down - Stop Docker Containers
 

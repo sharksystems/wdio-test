@@ -2,38 +2,37 @@ import BasePage from './BasePage.js';
 import PostFeed from '../page_elements/PostFeed.js';
 import { expect as wdioExpect } from '@wdio/globals';
 
-export default class HomePage extends BasePage {
-    postFeed = new PostFeed();
+class HomePage extends BasePage {
 
     async likePostByTitle(title) {
-        await this.postFeed.likePostByTitle(title);
+        await PostFeed.likePostByTitle(title);
     }
     async likeByTitleAndVerify(title) {
-        await this.postFeed.likeAndVerifyCountIncrement(title);
+        await PostFeed.likeAndVerifyCountIncrement(title);
     }
     async removeLikeByTitleAndVerify(title) {
-        await this.postFeed.removeLikeAndVerifyCountDecrement(title);
+        await PostFeed.removeLikeAndVerifyCountDecrement(title);
     }
     async clickPostAuthor(author) {
-        await this.postFeed.clickPostAuthor(author);
+        await PostFeed.clickPostAuthor(author);
     }
     async clickPostByAuthor(author) {
-        await this.postFeed.clickPostByAuthor(author);
+        await PostFeed.clickPostByAuthor(author);
     }
     async clickGlobalFeedTab() {
-        await this.postFeed.clickGlobalFeedTab();
+        await PostFeed.clickGlobalFeedTab();
     }
     async clickYourFeedTab() {
-        await this.postFeed.clickYourFeedTab();
+        await PostFeed.clickYourFeedTab();
     }
     async assertPostsByAuthorDisplayed(author) {
-        await this.postFeed.assertPostIsDisplayedByAuthor(author);
+        await PostFeed.assertPostIsDisplayedByAuthor(author);
     }
     async assertNoPostsDisplayed() {
-        await this.postFeed.assertNoPostsDisplayed();
+        await PostFeed.assertNoPostsDisplayed();
     }
     async refreshUntilNoPostsByAuthorAreDisplayed(author) {
-        await this.postFeed.refreshFeedUntilNoPostsByAuthorAreDisplayed(author)
+        await PostFeed.refreshFeedUntilNoPostsByAuthorAreDisplayed(author)
     }
     async assertUserIsOnHomepage() {
         await wdioExpect(browser).toHaveUrl('https://conduit.realworld.how/');
@@ -43,3 +42,5 @@ export default class HomePage extends BasePage {
         await super.visit('');
     }
 }
+
+export default new HomePage();
