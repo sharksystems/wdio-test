@@ -21,7 +21,7 @@ describe('Smoke Test', () => {
     await HomePage.visit();
   });
   
-  it.only('Registration Test', async () => {
+  it('Registration Test', async () => {
 
     await RegistrationPage.registerUser(randomUser.getUsername, randomUser.getEmail, randomUser.getPassword);
     await HomePage.assertLoggedInAs(randomUser.getUsername);
@@ -61,7 +61,7 @@ describe('Smoke Test', () => {
     await HomePage.clickGlobalFeedTab();
     await HomePage.likeByTitleAndVerify(sampleData.getTitle);
   });
-  it.only('Removing a favorited article on the profile page', async () => {
+  it('Removing a favorited article on the profile page', async () => {
 
     await LoginPage.login(randomUser.getEmail, randomUser.password);
     await HomePage.clickGlobalFeedTab();
